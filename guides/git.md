@@ -103,5 +103,92 @@ If you edited a line in your fork that was also changed in the `upstream` projec
 
 ---
 
+## 9. Common Scenarios
+
+### "I need to update my branch with main"
+
+```bash
+# latest : at branch
+git fetch origin main:main      # fetch without switching to main
+git rebase main
+# ----------- Conflict : rebase paused--------------- #
+# ----------- Resolve Conflict via VScode ----------- #
+# ----------- After conflict resolved --------------- #
+git add <conflicted_file>
+git rebase -- continue
+git push origin <branch> --force-with-lease
+```
+
+```bash
+# old command
+git checkout main
+git pull origin main
+git checkout your-branch
+git merge main              # Or: git rebase main
+```
+
+
+### "I need to check if my branch is updated with main"
+
+
+#### 0. basic
+
+`git fetch origin main` : Download teh changes on main without changing you local main
+`git fetch origin main:main` : Update local main with the latest update
+`git status` : compare the status against main
+
+#### 1. The Visual Comparison (Most Intuitive)
+
+If you want to see which commits exist on one branch but not the other, use the "Double Dot" syntax with the log.
+
+* **To see commits on your branch that are NOT in main:**
+`git log main..ds5_update --oneline --graph`
+* **To see commits on main that you are MISSING:**
+`git log ds5_update..main --oneline --graph`
+
+#### 2. The File-Level Diff
+
+If you don't care about the commit history but want to see the actual **code changes** between the two branches:
+
+* **View all code differences:**
+`git diff main..ds5_update`
+* **See only a summary of which files changed:**
+`git diff main..ds5_update --stat`
+
+
+
+#### 3. The "Left-Right" Comparison
+
+This is a powerful "pro" command that shows you both sides of the divergence at once. It tells you which commits are unique to each branch.
+
+`git log --left-right --oneline main...ds5_update`
+
+* Lines starting with `<` are unique to **main**.
+* Lines starting with `>` are unique to **your branch**.
+
+---
+
+#### 4. Using VS Code (The "Developer" Way)
+
+Since you are using VS Code on macOS, you don't actually need the terminal for this:
+
+1. Open the **Source Control** tab (shortcut: `Ctrl + Shift + G`).
+2. If you have the **GitLens** extension installed (highly recommended for Python devs), look at the **"Branch Comparison"** section.
+3. Select `main` as the reference. It will show you a folder-tree view of every line of code that differs.
+
+---
+
+##### Summary of Differences
+
+| Requirement | Command |
+| --- | --- |
+| **Commit Names** | `git log main..ds5_update --oneline` |
+| **Visual Tree** | `git log --graph --all --oneline` |
+| **Actual Code** | `git diff main` |
+| **Files Changed** | `git diff main --stat` |
+
+
+---
+
 ## ⚠️ The Golden Rule
 **Only rebase branches you own (local feature branches).** Never rebase a public branch like `main` if other people are using it, as it will break their history and cause massive conflicts for the team.

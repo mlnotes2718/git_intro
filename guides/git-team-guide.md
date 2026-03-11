@@ -228,12 +228,27 @@ git reset --hard HEAD~1
 ```
 
 ### "I need to update my branch with main"
+
 ```bash
+# latest : at branch
+git fetch origin main:main      # fetch without switching to main
+git rebase main
+# ----------- Conflict : rebase paused--------------- #
+# ----------- Resolve Conflict via VScode ----------- #
+# ----------- After conflict resolved --------------- #
+git add <conflicted_file>
+git rebase -- continue
+git push origin <branch> --force-with-lease
+```
+
+```bash
+# old command
 git checkout main
 git pull origin main
 git checkout your-branch
 git merge main              # Or: git rebase main
 ```
+
 
 ### "Someone pushed changes and now I can't push"
 ```bash
