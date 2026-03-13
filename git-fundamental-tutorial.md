@@ -6,6 +6,10 @@
 
 ## Table of Contents
 
+---
+
+## What is Git and Github
+
 
 ---
 
@@ -184,7 +188,30 @@ You can also sue terminal in VScode to clone your project using the command belo
 
 Create an empty folder called `docs` under this project.
 
-Use the following command 
+Use the following command to update
+
+```bash
+git add .
+git commit -m 'add an empty folder'
+```
+
+You'll get an error This is because git do not upload empty folder. To keep the folder we use add a file called `.gitkeep`. Use the following command:
+
+```bash
+cd docs # to go to the sub folder
+touch .gitkeep
+cd .. # to go back to the root of project folder
+```
+
+Please update your changes and sync to the website:
+```bash
+git add .
+git commit -m 'add an empty folder'
+git push
+```
+
+Note: always use teh command on the root folder where the hidden folder `.git` are.
+
 ---
 
 ## Make and Update Changes
@@ -192,7 +219,9 @@ Use the following command
 Please create a text file called mytext.txt in the src folder. You can create using Windows or Mac. Alternatively, you can use the command
 
 ```bash
+cd docs
 touch mytext.txt
+cd ..
 ```
 
 Use your favorite IDE or VSCode and write something on the file `mytext.txt`.
