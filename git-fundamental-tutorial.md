@@ -10,6 +10,9 @@
 
 ## What is Git and Github
 
+git is a system that capture and track code changes
+
+github is a web hosting services that uses git to sore git projects
 
 ---
 
@@ -204,13 +207,14 @@ cd .. # to go back to the root of project folder
 ```
 
 Please update your changes and sync to the website:
+
 ```bash
 git add .
 git commit -m 'add an empty folder'
 git push
 ```
 
-Note: always use teh command on the root folder where the hidden folder `.git` are.
+Note: always use teh command on the root folder where the hidden folder `.git` are. If you use git push on the sub folder, only the changes on the sub folder will be updated.
 
 ---
 
@@ -243,9 +247,194 @@ Guide:
 - give meaningful commit so that months later you know what have you done.
 
 
+### Tracking changes
+
+Use the following command to track the history of your changes
+
+```bash
+git log --oneline 
+```
+
+
+### Make changes by others
+Image if you are 2 person working on a project, if your peer make some changes, you need to update teh changes.
+
+To simulate this change, please go to the github website, navigate to the docs folder and open mytext.txt. Make some changes and commit it.
+
+Now open VSCode and see the changes. There is no changes.
+
+To get uodate we need to run teh followign command
+
+```bash
+git fetch main
+```
+
+The changes are not materialized yet but git has recorded teh cchanges,
+
+please use the command to check the difference
+
+```bash
+git diff
+```
+
+If you are ok with the chnages
+
+```bash
+git merge main
+```
+
+Alternatively, you can use the following command to fetch and merge at teh same time. You can practice this by making another chnage to the documents and do a git pull.
+
+```bash
+git pull
+```
+
+# Part 4 — Fetching and Pulling Changes
+
+This is one of the most important distinctions to understand in Git. There are three similar-looking commands that behave very differently.
+
+### The Three Commands Compared
+
+```bash
+git pull                  # (1) fetch + merge in one step
+git fetch origin main     # (2) download only — don't touch your branches
+git fetch origin main:main  # (3) download AND update your local main branch
+```
+
+---
+
+### `git pull`
+
+`git pull` is shorthand for two operations: **fetch** then **merge** (or rebase, depending on config). It downloads new commits from the remote **and immediately merges them into your current branch**.
+
+```bash
+git switch main
+git pull
+
+# Equivalent to:
+git fetch origin
+git merge origin/main
+```
+
+**When to use it:** When you're on a branch and want to bring it up to date with the remote in one step. This is the most common daily command.
+
+**Potential downside:** If you have local uncommitted changes or unpushed commits, the automatic merge can create merge commits or conflicts. Some teams prefer `git fetch` + manual `git merge` for more control.
+
+---
+
+### `git fetch origin main`
+
+`git fetch origin main` downloads commits from the remote `main` branch into a **remote-tracking reference** called `origin/main`. It does **not** touch your local `main` branch or your working directory at all.
+
+```bash
+git fetch origin main
+
+# Your local `main` is unchanged.
+# But origin/main is now up to date.
+
+# You can inspect what was fetched before merging:
+git log main..origin/main          # commits on remote not yet in local main
+git diff main origin/main          # see what changed
+
+# Then merge manually when you're ready:
+git merge origin/main
+```
+
+**When to use it:** When you want to **see what changed** on the remote without affecting your local work. Safe to run at any time.
+
+---
+
+### `git fetch origin main:main`
+
+`git fetch origin main:main` downloads commits from the remote `main` **and also fast-forwards your local `main` branch** to match — but only if you are **not** currently on `main`.
+
+```bash
+# You are on a feature branch
+git switch feature/bmi-calculator
+
+# This updates local main without switching branches
+git fetch origin main:main
+
+# Now local main is up to date — and you never left your feature branch!
+# You can now rebase your feature branch onto the updated main:
+git rebase main
+```
+
+**When to use it:** When you're working on a feature branch and want to update `main` in the background without switching to it. This is particularly useful before rebasing.
+
+> ⚠️ **Warning:** This command will **fail** if you are currently checked out on `main`, because Git won't update a branch you have checked out via a fetch. Use `git pull` instead in that case.
+
+---
+
+### Side-by-Side Summary
+
+| Command | Downloads new commits | Updates `origin/main` ref | Updates local `main` branch | Merges into current branch |
+|---|---|---|---|---|
+| `git pull` | ✅ | ✅ | ✅ (if on main) | ✅ automatic |
+| `git fetch origin main` | ✅ | ✅ | ❌ | ❌ manual |
+| `git fetch origin main:main` | ✅ | ✅ | ✅ (if NOT on main) | ❌ manual |
+
+---
+
+
 ## Part 2 — Feature Branches and Pull Requests
 
 For a personal project, we can make changes and commit our changes to the repository using the steps above, however, in real life, it is very seldom that we commit changes directly. Therefore, it is good to develop a habit of using branch.
+
+Now we are going to write soem code
+
+project
+
+Run this from inside your project root (the folder that contains `src/`):
+
+Use the following command to make sure uv are installed and running:
+```bash
+uv --version
+```
+
+Use the following command to install a python version:
+```bash
+uv python install 3.12
+```
+
+Use the following command to set a python version:
+```bash
+uv python pin 3.12
+```
+A file called `.python-version` is provided
+
+Use the following command to initialized uv without any additional files 
+```bash
+uv init --bare
+```
+`uv init --bare` only create the following files if they don't already exist:
+
+```
+my-project/
+└── pyproject.toml   ← project metadata and dependencies
+```
+
+For normal uv initialization it will create the following:
+- initialize the folder to a git folder by adding .git folder
+- initialize uv by adding pyproject.toml, .python-version, .gitignore, README.md and main.py
+
+We will be using the README.md and .gitignore file provided. we will be using main.py in src folder.
+
+
+> 📝 **Note:** With `uv`, you don't activate a virtual environment manually. Prefix commands with `uv run` and it handles the environment automatically.
+
+Your project structure should now look like this:
+
+```
+my-project/
+├── src/
+│   └── (empty for now)
+├── pyproject.toml
+├── uv.lock
+└── .python-version
+```
+
+
 
 ### 2.1 Create a Feature Branch
 
@@ -340,7 +529,7 @@ if __name__ == "__main__":
 ```bash
 # Stage the new files
 git add src/main.py 
-
+ 
 # Commit with a descriptive message
 git commit -m "feat: add BMI calculator with category labels"
 
@@ -349,6 +538,8 @@ git push -u origin feature/bmi-calculator
 
 # -u sets the upstream so future pushes only need: git push
 ```
+
+We use `git add .` to add all the changes. However if you are organizing your commit, you can add changes in selected files as shown above.
 
 ---
 
@@ -427,94 +618,7 @@ git commit -m "feat: accept weight in pounds (WIP)"
 git push -u origin feature/bmi-imperial-input
 ```
 
-Then on GitHub: open a PR, merge into `main`, delete the remote branch, and sync locally as shown in section 2.5.
-
----
-
-## Part 4 — Fetching and Pulling Changes
-
-This is one of the most important distinctions to understand in Git. There are three similar-looking commands that behave very differently.
-
-### The Three Commands Compared
-
-```bash
-git pull                  # (1) fetch + merge in one step
-git fetch origin main     # (2) download only — don't touch your branches
-git fetch origin main:main  # (3) download AND update your local main branch
-```
-
----
-
-### `git pull`
-
-`git pull` is shorthand for two operations: **fetch** then **merge** (or rebase, depending on config). It downloads new commits from the remote **and immediately merges them into your current branch**.
-
-```bash
-git switch main
-git pull
-
-# Equivalent to:
-git fetch origin
-git merge origin/main
-```
-
-**When to use it:** When you're on a branch and want to bring it up to date with the remote in one step. This is the most common daily command.
-
-**Potential downside:** If you have local uncommitted changes or unpushed commits, the automatic merge can create merge commits or conflicts. Some teams prefer `git fetch` + manual `git merge` for more control.
-
----
-
-### `git fetch origin main`
-
-`git fetch origin main` downloads commits from the remote `main` branch into a **remote-tracking reference** called `origin/main`. It does **not** touch your local `main` branch or your working directory at all.
-
-```bash
-git fetch origin main
-
-# Your local `main` is unchanged.
-# But origin/main is now up to date.
-
-# You can inspect what was fetched before merging:
-git log main..origin/main          # commits on remote not yet in local main
-git diff main origin/main          # see what changed
-
-# Then merge manually when you're ready:
-git merge origin/main
-```
-
-**When to use it:** When you want to **see what changed** on the remote without affecting your local work. Safe to run at any time.
-
----
-
-### `git fetch origin main:main`
-
-`git fetch origin main:main` downloads commits from the remote `main` **and also fast-forwards your local `main` branch** to match — but only if you are **not** currently on `main`.
-
-```bash
-# You are on a feature branch
-git switch feature/bmi-calculator
-
-# This updates local main without switching branches
-git fetch origin main:main
-
-# Now local main is up to date — and you never left your feature branch!
-# You can now rebase your feature branch onto the updated main:
-git rebase main
-```
-
-**When to use it:** When you're working on a feature branch and want to update `main` in the background without switching to it. This is particularly useful before rebasing.
-
-> ⚠️ **Warning:** This command will **fail** if you are currently checked out on `main`, because Git won't update a branch you have checked out via a fetch. Use `git pull` instead in that case.
-
----
-
-### Side-by-Side Summary
-
-| Command | Downloads new commits | Updates `origin/main` ref | Updates local `main` branch | Merges into current branch |
-|---|---|---|---|---|
-| `git pull` | ✅ | ✅ | ✅ (if on main) | ✅ automatic |
-| `git fetch origin main` | ✅ | ✅ | ❌ | ❌ manual |
-| `git fetch origin main:main` | ✅ | ✅ | ✅ (if NOT on main) | ❌ manual |
+Then on GitHub: open a PR, merge into `main`, delete the remote branch, and sync locally 
 
 ---
 
@@ -1291,7 +1395,7 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 
 > 💡 **Tip:** Restart your terminal after installing so the `uv` command is available on your PATH.
 
-#### Initialise the project
+#### Initialise the uv project
 
 Run this from inside your project root (the folder that contains `src/`):
 
