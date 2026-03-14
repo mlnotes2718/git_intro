@@ -950,7 +950,6 @@ git push -u origin feature/bmi-imperial
 On GitHub Extension: open a PR, merge it to `main`, delete the branch remotely and locally. Then:
 
 ```bash
-git switch main
 git pull
 ```
 
@@ -974,7 +973,7 @@ The bug is on `main`. `git revert` is the right tool here — it creates a **new
 git log --oneline
 
 # Revert the most recent commit (the buggy one)
-git revert HEAD --no-edit
+git revert HEAD -m 1 --no-edit
 ```
 
 `--no-edit` skips the editor and uses the default "Revert" message. Without it, git opens your editor so you can write a custom message.
@@ -1063,12 +1062,10 @@ git commit -m "feat: update output message for pounds input"
 git push -u origin feature/bmi-imperial-v2
 ```
 
-On GitHub: PR → merge → delete remote branch. Locally:
+On GitHub: PR → merge → delete remote and local branch. Locally:
 
 ```bash
-git switch main
 git pull
-git branch -d feature/bmi-imperial-v2
 ```
 
 Check the log:
@@ -1183,6 +1180,8 @@ git status
 ```bash
 # Restore src/main.py to its last committed state
 git restore src/main.py
+# OR if you make many changes at many places but you want to discard all
+git restore .
 ```
 
 Open `src/main.py` — it is back to the correct version.
@@ -1262,12 +1261,10 @@ git commit -m "feat: add imperial input — WIP (contains bug)"
 git push -u origin feature/imperial-broken
 ```
 
-On GitHub: open PR → merge to `main` → delete branch. Locally:
+On GitHub: open PR → merge to `main` → delete branch remotely and locally. Locally:
 
 ```bash
-git switch main
 git pull
-git branch -d feature/imperial-broken
 ```
 
 The bug is back on `main`. The log now looks something like:
@@ -1286,7 +1283,7 @@ You have a release tag `v1.0` pointing at the last known-good commit. Use it to 
 
 ```bash
 # Reset main to the v1.0 tag
-git reset --hard v1.0
+git revert v1.0..HEAD --no-edit
 ```
 
 Verify the reset worked:
@@ -1302,7 +1299,7 @@ uv run python src/main.py
 Force-push to update GitHub:
 
 ```bash
-git push --force-with-lease
+git push
 ```
 
 > 💡 **This is the power of tags.** Without `v1.0`, you would have had to scroll through `git log` to find the right hash. With a tag, you say exactly what you mean: "go back to the v1.0 release."
@@ -1415,7 +1412,7 @@ def test_normal_bmi():
 def test_bmi_from_pounds():
     # 154 lb converted correctly: 69.8532 kg → BMI 22.82, NOT 50.32
     weight_kg = pounds_to_kg(154)
-    assert calculate_bmi(weight_kg, 1.75) == 22.82
+    assert calculate_bmi(weight_kg, 1.75) == 22.81
 
 def test_zero_height_raises():
     try:
@@ -1511,9 +1508,7 @@ On GitHub: open PR → review the diff → confirm the tests are included → me
 Locally:
 
 ```bash
-git switch main
 git pull
-git branch -d fix/imperial-with-tests
 ```
 
 ### Tag the new release as v1.0.1
