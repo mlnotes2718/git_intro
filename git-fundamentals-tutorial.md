@@ -162,7 +162,7 @@ code .
 
 Now tidy up the downloaded files so you start with only what you need.
 
-### Keep `.gitkeep` in src, remove everything else inside src
+### Keep `.gitkeep` in src and tests folder, remove everything else inside src
 
 The `src` folder is where your Python source code will live. It currently contains example files — delete them all, but **keep the `.gitkeep` file**.
 
@@ -175,6 +175,8 @@ cd ~/Desktop/bmi-project
 
 # Delete everything in src EXCEPT .gitkeep
 find src -type f ! -name '.gitkeep' -delete
+# Delete everything in tests EXCEPT .gitkeep
+find tests -type f ! -name '.gitkeep' -delete
 ```
 
 ### Remove the docs folder entirely
@@ -191,7 +193,13 @@ Your project should now look like this:
 bmi-project/
 ├── src/
 │   └── .gitkeep
+├── tests/
+│   └── .gitkeep
+├── guides/. # various guide related to git including a textbook
+│   ├── ...
+│   └── progit.pdf
 ├── .gitignore
+├── git-fundamentals-tutorial.md
 └── README.md
 ```
 
@@ -240,7 +248,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
 ```
 
 You will learn more about `.gitignore` in Step 10.
