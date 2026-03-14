@@ -1,2 +1,3 @@
 This is my first text file tracked by Git.
 Git records every change I make to this file.
+This line was added directly on GitHub.
