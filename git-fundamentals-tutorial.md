@@ -96,6 +96,9 @@ git config --global user.email "you@example.com"
 # Set VS Code as the default editor (optional but recommended)
 git config --global core.editor "code --wait"
 
+# For macOS user you may need the following:
+git config --global http.postBuffer 524288000
+
 # Confirm your settings
 git config --list
 ```
