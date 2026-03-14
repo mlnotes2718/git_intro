@@ -424,9 +424,6 @@ To force Git to remember a folder, add a placeholder file:
 ```bash
 # Navigate into docs and create the placeholder
 touch docs/.gitkeep
-
-# Go back to the project root
-cd ..
 ```
 
 > 📝 **Note:** Always run git commands from the project root (the folder that contains `.git`). Running `git push` from inside a subfolder may only push changes in that subfolder.
