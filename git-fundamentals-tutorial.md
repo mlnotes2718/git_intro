@@ -85,16 +85,6 @@ sudo apt install git
 sudo dnf install git
 ```
 
-### Windows
-
-Download the official installer from **https://git-scm.com/download/win** and run it. During the setup wizard, accept the defaults. This installs both Git and **Git Bash** — a terminal that lets you run Git commands on Windows.
-
-After installation, open Git Bash and confirm:
-
-```bash
-git --version
-```
-
 ### Configure Git (all platforms — do this once)
 
 Tell Git who you are. These details are attached to every commit you make:
@@ -187,11 +177,6 @@ cd ~/Desktop/bmi-project
 find src -type f ! -name '.gitkeep' -delete
 ```
 
-#### On Windows (File Explorer):
-
-1. Open the `src` folder.
-2. Select all files except `.gitkeep` and delete them.
-
 ### Remove the docs folder entirely
 
 The downloaded repo may include a `docs` folder with example content. Delete the entire folder — you will recreate it from scratch in Step 9.
@@ -218,24 +203,44 @@ The repository you downloaded already includes a `README.md` and a `.gitignore`.
 
 ### README.md
 
-Open `README.md` in VS Code. It describes the project. Feel free to personalise the title and description to match your project name.
+Open `README.md` in VS Code. It describes the project. Feel free to personalize the title and description to match your project name.
 
 ### .gitignore
 
 Open `.gitignore`. This file tells Git which files and folders to never track. Confirm it contains at least these entries (add any that are missing):
 
 ```
-# Python
+# .gitignore
+## Source : https://github.com/github/gitignore
+
+## Python.gitignore
+## Source : https://github.com/github/gitignore/blob/main/Python.gitignore
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
-.env
+*.py[codz]
+*$py.class
 
-# Virtual environment (uv / venv)
-.venv/
+# C extensions
+*.so
 
-# macOS / Windows system files
-.DS_Store
-Thumbs.db
+# Distribution / packaging
+.Python
+build/
+...
+...
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
 ```
 
 You will learn more about `.gitignore` in Step 10.
