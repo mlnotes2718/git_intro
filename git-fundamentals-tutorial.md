@@ -947,7 +947,7 @@ git commit -m "feat: add imperial (pounds) input support"
 git push -u origin feature/bmi-imperial
 ```
 
-On GitHub: open a PR, merge it to `main`, delete the branch both remotely and locally . Then:
+On GitHub Extension: open a PR, merge it to `main`, delete the branch remotely and locally. Then:
 
 ```bash
 git switch main
